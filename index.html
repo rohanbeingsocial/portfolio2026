@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:var(--bg,#f7f6f3);font-family:'Space Grotesk',sans-serif}
+a{color:var(--ink,#232320);text-decoration:none}a:hover{color:var(--accent,#3d6ee0)}
+::selection{background:var(--selbg,#232320);color:var(--selink,var(--bg,#f7f6f3))}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes barGrow{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
+@keyframes pulseRing{0%{transform:scale(.5);opacity:.9}100%{transform:scale(2.1);opacity:0}}
+@keyframes floatDot{from{transform:translateY(3px)}to{transform:translateY(-4px)}}
+@keyframes travel{from{transform:translateX(-26px)}to{transform:translateX(26px)}}
+@keyframes glowNode{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes wordIn{from{opacity:0;transform:translateY(110%)}to{opacity:1;transform:translateY(0)}}
+@keyframes scopeSweep{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+/* demo slot: scrim only when media is dropped */
+[data-demo-scrim]{transition:opacity .35s}
+div:has(>demo-slot:not([data-filled]))+[data-demo-scrim]{opacity:0}
+@keyframes panelGrow{from{opacity:0;transform:scale(.88) translateY(-10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}::view-transition-new(root){z-index:2}
+</style>
+</helmet>
+<div style="display:grid;grid-template-columns:264px 1fr;min-height:100vh;color:var(--ink,#232320)">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside data-screen-label="Sidebar" style="border-right:1px solid var(--line,#e6e4de);padding:40px 30px;position:sticky;top:0;height:100vh;box-sizing:border-box;display:flex;flex-direction:column;background:var(--bg,#f7f6f3)">
+    <div style="font-weight:700;font-size:19px;line-height:1.2;letter-spacing:-.3px">Rohan<br>Deogaonkar</div>
+    <div style="font-size:12px;color:var(--muted,#8b8981);line-height:1.6;margin-top:10px">Engineer · MIT-WPU, Pune<br>SIH 2025 National Finalist</div>
+
+    <div style="margin-top:32px;display:flex;flex-direction:column;gap:3px;font-size:13px;white-space:nowrap">
+      <div style="font-size:10px;letter-spacing:1.5px;color:var(--faint,#a8a49a);padding:0 14px 8px">EXPLORE</div>
+      <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5">
+        <div onClick="{{ c.pick }}" style="padding:9px 14px;border-radius:9px;display:flex;justify-content:space-between;gap:12px;cursor:pointer;background:{{ c.bg }};color:{{ c.col }};transition:background .2s"><span>{{ c.label }}</span><span style="opacity:.55">{{ c.count }}</span></div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:28px;display:flex;flex-direction:column;gap:10px;font-size:12.5px;color:var(--sub2,#6d6b64)">
+      <div style="font-size:10px;letter-spacing:1.5px;color:var(--faint,#a8a49a);padding-left:14px">SECTIONS</div>
+      <a href="#projects" style="padding-left:14px;color:var(--sub2,#6d6b64)">Projects</a>
+      <a href="#skills" style="padding-left:14px;color:var(--sub2,#6d6b64)">Skills</a>
+      <a href="#experience" style="padding-left:14px;color:var(--sub2,#6d6b64)">Experience</a>
+      <a href="#achievements" style="padding-left:14px;color:var(--sub2,#6d6b64)">Achievements</a>
+      <a href="#publication" style="padding-left:14px;color:var(--sub2,#6d6b64)">Publication</a>
+      <a href="#research" style="padding-left:14px;color:var(--sub2,#6d6b64)">Research</a>
+      <a href="#contact" style="padding-left:14px;color:var(--sub2,#6d6b64)">Contact</a>
+    </div>
+
+    <a href="Resume.dc.html" style="margin-top:auto;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:99px;padding:9px 14px;font-size:12.5px;font-weight:600;background:var(--ink,#232320);color:var(--bg,#f7f6f3)" style-hover="color:var(--bg,#f7f6f3)">Resume ↓</a>
+    <div onClick="{{ toggleTheme }}" style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;border:1px solid var(--line3,#e2dfd7);border-radius:99px;padding:8px 14px;font-size:12px;color:var(--sub2,#6d6b64);background:var(--panel,#fff);transition:border-color .2s" style-hover="border-color:var(--linehover,#c8c5ba)">{{ themeLabel }}</div>
+    <div style="margin-top:18px;display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--muted,#8b8981)">
+      <a href="https://github.com/rohanbeingsocial" target="_blank" style="color:var(--muted,#8b8981)">GitHub ↗</a>
+      <a href="{{ linkedinUrl }}" target="_blank" style="color:var(--muted,#8b8981)">LinkedIn ↗</a>
+      <a href="{{ mediumUrl }}" target="_blank" style="color:var(--muted,#8b8981)">Medium ↗</a>
+      <a href="mailto:rohandeogaonkar.9@gmail.com" style="color:var(--muted,#8b8981)">Email ↗</a>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main style="min-width:0">
+
+    <!-- HERO -->
+    <section data-screen-label="Hero" style="padding:88px 64px 56px;border-bottom:1px solid var(--line2,#eeece6)">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;animation:fadeUp .5s ease both">
+        <span style="font-size:13px;color:var(--muted,#8b8981);letter-spacing:1.5px">ROHAN DEOGAONKAR · ENGINEER</span>
+        <span style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line3,#e2dfd7);border-radius:99px;padding:6px 14px;font-size:11.5px;color:var(--sub2,#6d6b64)"><span style="width:7px;height:7px;border-radius:50%;background:#5e9e6e"></span>Open to internships &amp; collaborations</span>
+      </div>
+      <h1 style="font-size:clamp(40px,5vw,58px);font-weight:600;line-height:1.12;letter-spacing:-1.8px;margin:24px 0 0;animation:fadeUp .5s .06s ease both">I build<br><span style="display:inline-block;border-bottom:3px solid var(--ink,#232320);padding-bottom:2px;white-space:nowrap">{{ typed }}</span><span style="display:inline-block;width:3px;height:.85em;background:var(--ink,#232320);margin-left:10px;vertical-align:-.08em;animation:blink 1s step-end infinite"></span></h1>
+      <p style="font-size:15.5px;line-height:1.7;color:var(--sub,#71716c);margin:24px 0 0;max-width:520px;animation:fadeUp .5s .12s ease both">One engineer across software, silicon, and markets. TY B.Tech ENTC (AI &amp; ML) at MIT World Peace University · SIH 2025 National Finalist.</p>
+      <div style="display:flex;gap:36px;margin-top:36px;animation:fadeUp .5s .18s ease both">
+        <div><div style="font-size:22px;font-weight:600">17</div><div style="font-size:11.5px;color:var(--muted,#8b8981);margin-top:2px">Projects &amp; repos</div></div>
+        <div><div style="font-size:22px;font-weight:600">1</div><div style="font-size:11.5px;color:var(--muted,#8b8981);margin-top:2px">Preprint</div></div>
+        <div><div style="font-size:22px;font-weight:600">3</div><div style="font-size:11.5px;color:var(--muted,#8b8981);margin-top:2px">Certifications</div></div>
+        <div><div style="font-size:22px;font-weight:600">4</div><div style="font-size:11.5px;color:var(--muted,#8b8981);margin-top:2px">Domains</div></div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 38px; border: 1px solid var(--line,#e6e4de); background: var(--panel,#fff); border-radius: 12px; padding: 12px 18px; font-size: 12.5px; color: var(--sub,#71716c); animation: fadeUp .5s .24s ease both; max-width: 820px; box-sizing: border-box; width: 679px; height: 61px">
+        <span data-om-id="88c0de77:62" style="font-size: 10px; letter-spacing: 2px; color: var(--faint,#a8a49a); font-weight: 600;">NOW</span>
+        <span data-om-id="88c0de77:63">Building CandleKit v0.2</span><span data-om-id="88c0de77:64" style="color: var(--line5,#d8d5cc);">·</span>
+        <span data-om-id="88c0de77:65">Researching ETF arbitrage &amp; passive flows</span><span data-om-id="88c0de77:69" style="margin-left: auto; font-size: 11px; color: var(--faint,#a8a49a); white-space: nowrap;">press <span data-om-id="88c0de77:70" style="background: var(--chipbg,#f0efe9); padding: 2px 7px; border-radius: 5px; font-family: ui-monospace, Menlo, monospace;">~</span> for terminal</span>
+        
+      </div>
+    </section>
+
+    <!-- PROOF OF WORK -->
+    <section id="proof" data-screen-label="Proof of work" style="padding:44px 64px 48px;border-bottom:1px solid var(--line2,#eeece6)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px">
+        <span style="font-size:10px;letter-spacing:2px;color:var(--faint,#a8a49a);font-weight:600">Activity</span>
+        <a href="https://github.com/rohanbeingsocial" target="_blank" style="font-size:11px;color:var(--muted,#8b8981)">{{ ghMeta }} ↗</a>
+      </div>
+      <div style="display:flex;gap:3px;margin-top:16px;overflow:hidden">
+        <sc-for list="{{ ghWeeks }}" as="wk" hint-placeholder-count="52">
+          <div style="display:grid;grid-template-rows:repeat(7,1fr);gap:3px;flex:1;max-width:12px;min-width:0">
+            <sc-for list="{{ wk.days }}" as="d" hint-placeholder-count="7">
+              <span title="{{ d.tip }}" style="display:block;height:9px;border-radius:2px;background:{{ d.color }}"></span>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+        <sc-for list="{{ ghCommits }}" as="c" hint-placeholder-count="0">
+          <a href="{{ c.url }}" target="_blank" style="display:inline-flex;align-items:baseline;gap:8px;background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:6px;padding:7px 11px;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--sub2,#6d6b64);max-width:100%;overflow:hidden" style-hover="border-color:#a8a49a">
+            <span style="font-weight:700;color:var(--ink,#232320);white-space:nowrap">{{ c.repo }}</span>
+            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.msg }}</span>
+            <span style="color:var(--faint,#a8a49a);white-space:nowrap">{{ c.when }}</span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- PROJECT EXPLORER -->
+    <section id="projects" data-screen-label="Projects" style="padding:56px 64px 72px;scroll-margin-top:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+        <div>
+          <h2 style="font-size:26px;font-weight:600;letter-spacing:-.6px;margin:0">Everything I've built.</h2>
+          <div style="font-size:13px;color:var(--muted,#8b8981);margin-top:5px">Resume projects + every public repo, in one explorable index.</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div onClick="{{ openSearch }}" style="display:flex;align-items:center;gap:8px;border:1px solid var(--line3,#e2dfd7);border-radius:99px;padding:8px 16px;font-size:12.5px;color:var(--muted,#8b8981);cursor:pointer;background:var(--panel,#fff)" style-hover="border-color:var(--linehover,#c8c4b8);color:var(--sub2,#6d6b64)"><span>⌕</span><span>Search</span><span style="font-size:10px;background:var(--chipbg,#f0efe9);padding:2px 6px;border-radius:5px">⌘K</span></div>
+          <div style="display:flex;background:var(--chipbg2,#eceae4);border-radius:99px;padding:4px;font-size:12.5px">
+            <span onClick="{{ toGrid }}" style="padding:7px 18px;border-radius:99px;cursor:pointer;background:{{ gridBg }};color:{{ gridCol }};font-weight:{{ gridW }};box-shadow:{{ gridSh }}">Grid</span>
+            <span onClick="{{ toJourney }}" style="padding:7px 18px;border-radius:99px;cursor:pointer;background:{{ jBg }};color:{{ jCol }};font-weight:{{ jW }};box-shadow:{{ jSh }}">Journey</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DETAIL PANEL (journey view only — grid expands in place) -->
+      <sc-if value="{{ selJourney }}" hint-placeholder-val="{{ false }}">
+        <div style="background:var(--carddark,#232320);color:#f0efe9;border-radius:18px;padding:32px;margin-top:26px;position:relative;overflow:hidden;animation:fadeUp .35s ease both">
+          <!-- demo background: drop a GIF / screen recording per project -->
+          <div style="position:absolute;inset:0;z-index:0">
+            <x-import component-from-global-scope="demo-slot" from="./demo-slot.js" id="demo-{{ sel.id }}" src="{{ sel.video }}" placeholder="Drop a demo video / GIF of {{ sel.title }}" hint-size="100%,100%" style="position:absolute;inset:0"></x-import>
+            <div data-demo-scrim="true" style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(35,35,32,.96) 0%,rgba(35,35,32,.88) 42%,rgba(35,35,32,.45) 72%,rgba(35,35,32,.15) 100%);pointer-events:none"></div>
+          </div>
+          <div onClick="{{ closeSel }}" style="position:absolute;top:18px;right:22px;font-size:16px;color:var(--muted,#8b8981);cursor:pointer;padding:6px;z-index:3" style-hover="color:#f0efe9">✕</div>
+          <div style="position:relative;z-index:2;pointer-events:none;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <span style="font-size:10.5px;background:#3a3a35;color:#c8c6be;padding:4px 11px;border-radius:99px;letter-spacing:.5px">{{ sel.catLabel }}</span>
+            <span style="font-size:10.5px;background:#33422f;color:#b8d4a8;padding:4px 11px;border-radius:99px;letter-spacing:.5px">{{ sel.status }}</span>
+          </div>
+          <div style="position:relative;z-index:2;pointer-events:none;font-size:26px;font-weight:600;margin-top:16px">{{ sel.title }}</div>
+          <div style="position:relative;z-index:2;pointer-events:none;font-size:13.5px;line-height:1.75;color:#b8b6ae;margin-top:10px;max-width:620px">{{ sel.desc }}</div>
+          <div style="position:relative;z-index:2;pointer-events:none;display:flex;gap:32px;margin-top:24px;font-size:11.5px;color:var(--muted,#8b8981);flex-wrap:wrap">
+            <div style="white-space:nowrap"><div style="color:#f0efe9;font-size:15px;font-weight:600">{{ sel.year }}</div>Timeline</div>
+            <div style="white-space:nowrap"><div style="color:#f0efe9;font-size:15px;font-weight:600">{{ sel.role }}</div>Role</div>
+            <div style="white-space:nowrap"><div style="color:#f0efe9;font-size:15px;font-weight:600">{{ sel.output }}</div>Output</div>
+          </div>
+          <div style="position:relative;z-index:2;pointer-events:none;font-size:11.5px;color:var(--muted,#8b8981);margin-top:20px">{{ sel.stack }}</div>
+          <div style="position:relative;z-index:2;display:flex;gap:10px;margin-top:22px;flex-wrap:wrap">
+            <sc-if value="{{ sel.url }}" hint-placeholder-val="{{ false }}">
+              <a href="{{ sel.url }}" target="_blank" style="display:inline-block;background:var(--chipbg,#f0efe9);color:var(--ink,#232320);font-size:12.5px;font-weight:600;padding:10px 20px;border-radius:99px" style-hover="background:var(--panel,#fff);color:var(--ink,#232320)">View on GitHub ↗</a>
+            </sc-if>
+            <sc-if value="{{ sel.demo }}" hint-placeholder-val="{{ false }}">
+              <a href="{{ sel.demo }}" target="_blank" style="display:inline-block;background:var(--chipbg,#f0efe9);color:var(--ink,#232320);font-size:12.5px;font-weight:600;padding:10px 20px;border-radius:99px" style-hover="background:var(--panel,#fff);color:var(--ink,#232320)">Live demo ↗</a>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- GRID VIEW -->
+      <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ true }}">
+        <sc-if value="{{ hasPinned }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:10.5px;letter-spacing:2.5px;color:var(--muted,#8b8981);margin-top:28px;display:flex;align-items:center;gap:10px"><span>PINNED</span><span style="flex:1;height:1px;background:var(--line,#e6e4de)"></span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:14px">
+          <sc-for list="{{ pinnedShown }}" as="p" hint-placeholder-count="6">
+            <div onClick="{{ p.open }}" data-card="true" style="display:{{ p.cardDisp }};visibility:visible;position:relative;background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s cubic-bezier(.22,1,.36,1),border-color .35s;animation:fadeUp .45s ease both" style-hover="transform:translateY(-3px);box-shadow:0 12px 32px rgba(35,35,32,.10);border-color:var(--line5,#d8d5cc)">
+              <div style="height:86px;background:{{ p.mBg }};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+                <sc-if value="{{ p.mCandles }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:flex-end;gap:4px;height:52px">
+                    <span style="width:7px;height:22px;background:#7cb87c;transform-origin:bottom;animation:barGrow 1.4s .0s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:7px;height:36px;background:#c86a5a;transform-origin:bottom;animation:barGrow 1.4s .2s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:7px;height:18px;background:#7cb87c;transform-origin:bottom;animation:barGrow 1.4s .35s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:7px;height:44px;background:#7cb87c;transform-origin:bottom;animation:barGrow 1.4s .5s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:7px;height:30px;background:#c86a5a;transform-origin:bottom;animation:barGrow 1.4s .65s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:7px;height:50px;background:#d4a856;transform-origin:bottom;animation:barGrow 1.4s .8s ease-in-out infinite alternate {{ play }}"></span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.mCluster }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;gap:9px">
+                    <span style="width:8px;height:8px;border-radius:50%;background:#7cb87c;animation:floatDot 2.2s .1s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:8px;height:8px;border-radius:50%;background:#7cb87c;opacity:.6;animation:floatDot 2.2s .5s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:22px;height:1px;background:#4a5a4a"></span>
+                    <span style="width:16px;height:16px;border-radius:50%;border:2px solid #b8d4a8;animation:floatDot 2.6s .3s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:22px;height:1px;background:#4a5a4a"></span>
+                    <span style="width:8px;height:8px;border-radius:50%;background:#7cb87c;opacity:.6;animation:floatDot 2.2s .8s ease-in-out infinite alternate {{ play }}"></span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.mPulse }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:relative;width:16px;height:16px">
+                    <span style="position:absolute;inset:0;border-radius:50%;background:#6fd6ff"></span>
+                    <span style="position:absolute;inset:0;border-radius:50%;border:2px solid #6fd6ff;animation:pulseRing 1.8s ease-out infinite {{ play }}"></span>
+                    <span style="position:absolute;inset:0;border-radius:50%;border:2px solid #6fd6ff;animation:pulseRing 1.8s .6s ease-out infinite {{ play }}"></span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.mTicker }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+                    <span style="width:9px;height:9px;border-radius:50%;background:#c99ae0;animation:travel 1.9s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:78px;height:2px;background:#4a3f52;border-radius:2px"></span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.mNodes }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span style="width:10px;height:10px;background:#e0c48a;border-radius:3px;animation:glowNode 2s .0s ease infinite {{ play }}"></span>
+                    <span style="width:26px;height:1px;background:#5a5040"></span>
+                    <span style="width:10px;height:10px;background:#e0c48a;border-radius:3px;animation:glowNode 2s .6s ease infinite {{ play }}"></span>
+                    <span style="width:26px;height:1px;background:#5a5040"></span>
+                    <span style="width:10px;height:10px;background:#e0c48a;border-radius:3px;animation:glowNode 2s 1.2s ease infinite {{ play }}"></span>
+                  </div>
+                </sc-if>
+              </div>
+              <div style="padding:16px 18px 18px">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                  <span style="font-size:15px;font-weight:600;min-width:0;line-height:1.35">{{ p.title }}</span>
+                  <span style="font-size:9.5px;background:{{ p.tagBg }};color:{{ p.tagCol }};padding:4px 9px;border-radius:99px;white-space:nowrap;letter-spacing:.5px">{{ p.catShort }}</span>
+                </div>
+                <div style="font-size:12px;line-height:1.6;color:var(--muted,#8b8981);margin-top:6px">{{ p.blurb }}</div>
+                <div style="font-size:10px;letter-spacing:1px;color:var(--faint3,#b0aea5);margin-top:12px">{{ p.yearNum }}</div>
+              </div>
+            </div>
+            <sc-if value="{{ p.isSel }}" hint-placeholder-val="{{ false }}">
+              <div ref="{{ p.panelRef }}" style="grid-column:1/-1;background:var(--carddark,#232320);color:#f0efe9;border-radius:18px;padding:32px;position:relative;overflow:hidden;transform-origin:top center">
+                <div style="position:absolute;inset:0;z-index:0">
+                  <x-import component-from-global-scope="demo-slot" from="./demo-slot.js" id="demo-{{ p.id }}" src="{{ p.video }}" placeholder="Drop a demo video / GIF of {{ p.title }}" hint-size="100%,100%" style="position:absolute;inset:0"></x-import>
+                  <div data-demo-scrim="true" style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(35,35,32,.96) 0%,rgba(35,35,32,.88) 42%,rgba(35,35,32,.45) 72%,rgba(35,35,32,.15) 100%);pointer-events:none"></div>
+                </div>
+                <div onClick="{{ closeSel }}" style="position:absolute;top:18px;right:22px;font-size:16px;color:var(--muted,#8b8981);cursor:pointer;padding:6px;z-index:3" style-hover="color:#f0efe9">✕</div>
+                <div style="position:relative;z-index:2;pointer-events:none;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                  <span style="font-size:10.5px;background:#3a3a35;color:#c8c6be;padding:4px 11px;border-radius:99px;letter-spacing:.5px">{{ p.catLabel }}</span>
+                  <span style="font-size:10.5px;background:#33422f;color:#b8d4a8;padding:4px 11px;border-radius:99px;letter-spacing:.5px">{{ p.status }}</span>
+                </div>
+                <div style="position:relative;z-index:2;pointer-events:none;font-size:26px;font-weight:600;margin-top:16px">{{ p.title }}</div>
+                <div style="position:relative;z-index:2;pointer-events:none;font-size:13.5px;line-height:1.75;color:#b8b6ae;margin-top:10px;max-width:620px">{{ p.desc }}</div>
+                <div style="position:relative;z-index:2;pointer-events:none;display:flex;gap:32px;margin-top:24px;font-size:11.5px;color:var(--muted,#8b8981);flex-wrap:wrap">
+                  <div style="white-space:nowrap"><div style="color:#f0efe9;font-size:15px;font-weight:600">{{ p.year }}</div>Timeline</div>
+                  <div style="white-space:nowrap"><div style="color:#f0efe9;font-size:15px;font-weight:600">{{ p.role }}</div>Role</div>
+                  <div style="white-space:nowrap"><div style="color:#f0efe9;font-size:15px;font-weight:600">{{ p.output }}</div>Output</div>
+                </div>
+                <div style="position:relative;z-index:2;pointer-events:none;font-size:11.5px;color:var(--muted,#8b8981);margin-top:20px">{{ p.stack }}</div>
+                <div style="position:relative;z-index:2;display:flex;gap:10px;margin-top:22px;flex-wrap:wrap">
+                  <sc-if value="{{ p.url }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ p.url }}" target="_blank" style="display:inline-block;background:var(--chipbg,#f0efe9);color:var(--ink,#232320);font-size:12.5px;font-weight:600;padding:10px 20px;border-radius:99px" style-hover="background:var(--panel,#fff);color:var(--ink,#232320)">View on GitHub ↗</a>
+                  </sc-if>
+                  <sc-if value="{{ p.demo }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ p.demo }}" target="_blank" style="display:inline-block;background:var(--chipbg,#f0efe9);color:var(--ink,#232320);font-size:12.5px;font-weight:600;padding:10px 20px;border-radius:99px" style-hover="background:var(--panel,#fff);color:var(--ink,#232320)">Live demo ↗</a>
+                  </sc-if>
+                  <sc-if value="{{ p.paper }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ p.paper }}" target="_blank" style="display:inline-block;background:var(--chipbg,#f0efe9);color:var(--ink,#232320);font-size:12.5px;font-weight:600;padding:10px 20px;border-radius:99px" style-hover="background:var(--panel,#fff);color:var(--ink,#232320)">Preprint ↗</a>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-if>
+          </sc-for>
+        </div>
+        <div style="font-size:10.5px;letter-spacing:2.5px;color:var(--muted,#8b8981);margin-top:32px;display:flex;align-items:center;gap:10px"><span>ALL PROJECTS</span><span style="flex:1;height:1px;background:var(--line,#e6e4de)"></span></div>
+        </sc-if>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:14px">
+          <sc-for list="{{ shown }}" as="p" hint-placeholder-count="6">
+            <div onClick="{{ p.open }}" data-card="true" style="display:{{ p.cardDisp }};visibility:visible;position:relative;background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s cubic-bezier(.22,1,.36,1),border-color .35s;animation:fadeUp .45s ease both" style-hover="transform:translateY(-3px);box-shadow:0 12px 32px rgba(35,35,32,.10);border-color:var(--line5,#d8d5cc)">
+              <div style="height:86px;background:{{ p.mBg }};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+                <sc-if value="{{ p.mCandles }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:flex-end;gap:4px;height:52px">
+                    <span style="width:7px;height:22px;background:#7cb87c;transform-origin:bottom;animation:barGrow 1.4s .0s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:7px;height:36px;background:#c86a5a;transform-origin:bottom;animation:barGrow 1.4s .2s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:7px;height:18px;background:#7cb87c;transform-origin:bottom;animation:barGrow 1.4s .35s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:7px;height:44px;background:#7cb87c;transform-origin:bottom;animation:barGrow 1.4s .5s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:7px;height:30px;background:#c86a5a;transform-origin:bottom;animation:barGrow 1.4s .65s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:7px;height:50px;background:#d4a856;transform-origin:bottom;animation:barGrow 1.4s .8s ease-in-out infinite alternate {{ play }}"></span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.mCluster }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;gap:9px">
+                    <span style="width:8px;height:8px;border-radius:50%;background:#7cb87c;animation:floatDot 2.2s .1s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:8px;height:8px;border-radius:50%;background:#7cb87c;opacity:.6;animation:floatDot 2.2s .5s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:22px;height:1px;background:#4a5a4a"></span>
+                    <span style="width:16px;height:16px;border-radius:50%;border:2px solid #b8d4a8;animation:floatDot 2.6s .3s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:22px;height:1px;background:#4a5a4a"></span>
+                    <span style="width:8px;height:8px;border-radius:50%;background:#7cb87c;opacity:.6;animation:floatDot 2.2s .8s ease-in-out infinite alternate {{ play }}"></span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.mPulse }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:relative;width:16px;height:16px">
+                    <span style="position:absolute;inset:0;border-radius:50%;background:#6fd6ff"></span>
+                    <span style="position:absolute;inset:0;border-radius:50%;border:2px solid #6fd6ff;animation:pulseRing 1.8s ease-out infinite {{ play }}"></span>
+                    <span style="position:absolute;inset:0;border-radius:50%;border:2px solid #6fd6ff;animation:pulseRing 1.8s .6s ease-out infinite {{ play }}"></span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.mTicker }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+                    <span style="width:9px;height:9px;border-radius:50%;background:#c99ae0;animation:travel 1.9s ease-in-out infinite alternate {{ play }}"></span>
+                    <span style="width:78px;height:2px;background:#4a3f52;border-radius:2px"></span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.mNodes }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span style="width:10px;height:10px;background:#e0c48a;border-radius:3px;animation:glowNode 2s .0s ease infinite {{ play }}"></span>
+                    <span style="width:26px;height:1px;background:#5a5040"></span>
+                    <span style="width:10px;height:10px;background:#e0c48a;border-radius:3px;animation:glowNode 2s .6s ease infinite {{ play }}"></span>
+                    <span style="width:26px;height:1px;background:#5a5040"></span>
+                    <span style="width:10px;height:10px;background:#e0c48a;border-radius:3px;animation:glowNode 2s 1.2s ease infinite {{ play }}"></span>
+                  </div>
+                </sc-if>
+              </div>
+              <div style="padding:16px 18px 18px">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                  <span style="font-size:15px;font-weight:600;min-width:0;line-height:1.35">{{ p.title }}</span>
+                  <span style="font-size:9.5px;background:{{ p.tagBg }};color:{{ p.tagCol }};padding:4px 9px;border-radius:99px;white-space:nowrap;letter-spacing:.5px">{{ p.catShort }}</span>
+                </div>
+                <div style="font-size:12px;line-height:1.6;color:var(--muted,#8b8981);margin-top:6px">{{ p.blurb }}</div>
+                <div style="font-size:10px;letter-spacing:1px;color:var(--faint3,#b0aea5);margin-top:12px">{{ p.yearNum }}</div>
+              </div>
+            </div>
+            <sc-if value="{{ p.isSel }}" hint-placeholder-val="{{ false }}">
+              <div ref="{{ p.panelRef }}" style="grid-column:1/-1;background:var(--carddark,#232320);color:#f0efe9;border-radius:18px;padding:32px;position:relative;overflow:hidden;transform-origin:top center">
+                <div style="position:absolute;inset:0;z-index:0">
+                  <x-import component-from-global-scope="demo-slot" from="./demo-slot.js" id="demo-{{ p.id }}" src="{{ p.video }}" placeholder="Drop a demo video / GIF of {{ p.title }}" hint-size="100%,100%" style="position:absolute;inset:0"></x-import>
+                  <div data-demo-scrim="true" style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(35,35,32,.96) 0%,rgba(35,35,32,.88) 42%,rgba(35,35,32,.45) 72%,rgba(35,35,32,.15) 100%);pointer-events:none"></div>
+                </div>
+                <div onClick="{{ closeSel }}" style="position:absolute;top:18px;right:22px;font-size:16px;color:var(--muted,#8b8981);cursor:pointer;padding:6px;z-index:3" style-hover="color:#f0efe9">✕</div>
+                <div style="position:relative;z-index:2;pointer-events:none;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                  <span style="font-size:10.5px;background:#3a3a35;color:#c8c6be;padding:4px 11px;border-radius:99px;letter-spacing:.5px">{{ p.catLabel }}</span>
+                  <span style="font-size:10.5px;background:#33422f;color:#b8d4a8;padding:4px 11px;border-radius:99px;letter-spacing:.5px">{{ p.status }}</span>
+                </div>
+                <div style="position:relative;z-index:2;pointer-events:none;font-size:26px;font-weight:600;margin-top:16px">{{ p.title }}</div>
+                <div style="position:relative;z-index:2;pointer-events:none;font-size:13.5px;line-height:1.75;color:#b8b6ae;margin-top:10px;max-width:620px">{{ p.desc }}</div>
+                <div style="position:relative;z-index:2;pointer-events:none;display:flex;gap:32px;margin-top:24px;font-size:11.5px;color:var(--muted,#8b8981);flex-wrap:wrap">
+                  <div style="white-space:nowrap"><div style="color:#f0efe9;font-size:15px;font-weight:600">{{ p.year }}</div>Timeline</div>
+                  <div style="white-space:nowrap"><div style="color:#f0efe9;font-size:15px;font-weight:600">{{ p.role }}</div>Role</div>
+                  <div style="white-space:nowrap"><div style="color:#f0efe9;font-size:15px;font-weight:600">{{ p.output }}</div>Output</div>
+                </div>
+                <div style="position:relative;z-index:2;pointer-events:none;font-size:11.5px;color:var(--muted,#8b8981);margin-top:20px">{{ p.stack }}</div>
+                <div style="position:relative;z-index:2;display:flex;gap:10px;margin-top:22px;flex-wrap:wrap">
+                  <sc-if value="{{ p.url }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ p.url }}" target="_blank" style="display:inline-block;background:var(--chipbg,#f0efe9);color:var(--ink,#232320);font-size:12.5px;font-weight:600;padding:10px 20px;border-radius:99px" style-hover="background:var(--panel,#fff);color:var(--ink,#232320)">View on GitHub ↗</a>
+                  </sc-if>
+                  <sc-if value="{{ p.demo }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ p.demo }}" target="_blank" style="display:inline-block;background:var(--chipbg,#f0efe9);color:var(--ink,#232320);font-size:12.5px;font-weight:600;padding:10px 20px;border-radius:99px" style-hover="background:var(--panel,#fff);color:var(--ink,#232320)">Live demo ↗</a>
+                  </sc-if>
+                  <sc-if value="{{ p.paper }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ p.paper }}" target="_blank" style="display:inline-block;background:var(--chipbg,#f0efe9);color:var(--ink,#232320);font-size:12.5px;font-weight:600;padding:10px 20px;border-radius:99px" style-hover="background:var(--panel,#fff);color:var(--ink,#232320)">Preprint ↗</a>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-if>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- JOURNEY VIEW -->
+      <div style="display:{{ journeyDisp }};margin-top:34px;background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:14px;padding:20px 24px;max-width:720px;box-sizing:border-box;animation:fadeUp .4s ease both">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
+            <span style="font-size:11px;letter-spacing:1.5px;color:var(--muted,#8b8981)">PROJECT ACTIVITY · AUG 2024 – JUL 2026</span>
+            <span style="font-size:10.5px;color:var(--faint,#a8a49a)">1 cell = 1 month</span>
+          </div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:14px">
+            <sc-for list="{{ heatCells }}" as="hc" hint-placeholder-count="12">
+              <div title="{{ hc.tip }}" style="width:16px;height:16px;border-radius:4px;background:{{ hc.bg }}"></div>
+            </sc-for>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;margin-top:12px;font-size:10px;color:var(--faint,#a8a49a)">
+            <span>less</span>
+            <span style="width:10px;height:10px;border-radius:3px;background:var(--chipbg2,#eceae4)"></span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#b8d4a8"></span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#7cb87c"></span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#4a7a48"></span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#33512f"></span>
+            <span>more</span>
+          </div>
+        </div>
+        <sc-if value="{{ isJourney }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:38px;position:relative;padding-left:26px;animation:fadeUp .4s ease both">
+          <div style="position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--line4,#e0ddd4),#232320)"></div>
+          <sc-for list="{{ journey }}" as="era" hint-placeholder-count="4">
+            <div style="position:relative;margin-bottom:34px">
+              <div style="position:absolute;left:-26px;top:3px;width:12px;height:12px;border-radius:50%;background:{{ era.dot }};border:2px solid var(--bg,#f7f6f3)"></div>
+              <div style="font-size:11.5px;color:var(--muted,#8b8981)"><span style="font-weight:600;color:var(--ink,#232320)">{{ era.year }}</span> — {{ era.label }}</div>
+              <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+                <sc-for list="{{ era.items }}" as="it" hint-placeholder-count="3">
+                  <div onClick="{{ it.open }}" style="background:{{ it.bg }};color:{{ it.col }};border:1px solid {{ it.border }};border-radius:10px;padding:11px 16px;font-size:13px;font-weight:600;cursor:{{ it.cursor }};transition:transform .2s" style-hover="transform:translateY(-2px)">{{ it.title }} <span style="font-weight:400;font-size:11px;color:{{ it.noteCol }}">{{ it.note }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" data-screen-label="Skills" style="padding:56px 64px;border-top:1px solid var(--line2,#eeece6);scroll-margin-top:8px">
+      <h2 style="font-size:22px;font-weight:600;letter-spacing:-.5px;margin:0 0 24px">Skills</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
+        <sc-for list="{{ skills }}" as="s" hint-placeholder-count="6">
+          <div style="background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:14px;padding:20px 22px">
+            <div style="font-size:11px;letter-spacing:1.5px;color:var(--muted,#8b8981)">{{ s.area }}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px">
+              <sc-for list="{{ s.chips }}" as="ch" hint-placeholder-count="5">
+                <span style="font-size:11.5px;background:var(--chipbg,#f0efe9);color:var(--chipink,#4a4842);padding:5px 11px;border-radius:99px;white-space:nowrap">{{ ch }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top:30px">
+        <div style="font-size:10.5px;letter-spacing:2.5px;color:var(--muted,#8b8981);display:flex;align-items:center;gap:10px"><span>STACK × PROJECTS</span><span style="flex:1;height:1px;background:var(--line,#e6e4de);max-width:640px"></span></div>
+        <div style="font-size:12px;color:var(--faint,#a8a49a);margin-top:10px">Pick a tool to see everywhere it's been used.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+          <sc-for list="{{ toolChips }}" as="t" hint-placeholder-count="8">
+            <div onClick="{{ t.pick }}" style="font-size:12px;padding:7px 15px;border-radius:99px;cursor:pointer;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.col }};transition:all .2s">{{ t.label }}</div>
+          </sc-for>
+        </div>
+          <div style="display:{{ toolProjDisp }};gap:10px;flex-wrap:wrap;margin-top:16px">
+            <sc-for list="{{ toolProjects }}" as="tp" hint-placeholder-count="3">
+              <div onClick="{{ tp.open }}" style="background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:10px;padding:11px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:transform .2s" style-hover="transform:translateY(-2px)">{{ tp.title }} <span style="font-weight:400;font-size:11px;color:var(--muted,#8b8981)">{{ tp.year }}</span></div>
+            </sc-for>
+          </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" data-screen-label="Experience" style="padding:56px 64px;border-top:1px solid var(--line2,#eeece6);scroll-margin-top:8px">
+      <h2 style="font-size:22px;font-weight:600;letter-spacing:-.5px;margin:0 0 24px">Experience</h2>
+      <div style="display:flex;flex-direction:column;gap:14px;max-width:720px">
+        <div style="background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:14px;padding:22px 26px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
+            <span style="font-size:16px;font-weight:600">Data Management &amp; Voice AI Automation</span>
+            <span style="font-size:12px;color:var(--muted,#8b8981);white-space:nowrap">Nov 2022 – Present</span>
+          </div>
+          <div style="font-size:13px;color:var(--accent,#3d6ee0);margin-top:3px">MTXL, Pune</div>
+          <div style="font-size:13px;line-height:1.7;color:var(--sub,#71716c);margin-top:10px">Configured and trained a voice-to-text application — audio bit-rate conversion, voice-recognition training, and automated text-processing pipelines.</div>
+        </div>
+        <div style="background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:14px;padding:22px 26px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
+            <span style="font-size:16px;font-weight:600">Sensor Research Collaborations</span>
+            <span style="font-size:12px;color:var(--muted,#8b8981);white-space:nowrap">2025 – 2026</span>
+          </div>
+          <div style="font-size:13px;color:var(--accent,#3d6ee0);margin-top:3px">NICMAR University</div>
+          <div style="font-size:13px;line-height:1.7;color:var(--sub,#71716c);margin-top:10px">Embedded DS18B20 sensors inside concrete to study road thermal behavior; deployed piezoelectric sensors for micro-crack detection in structural health monitoring.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACHIEVEMENTS -->
+    <section id="achievements" data-screen-label="Achievements" style="padding:56px 64px;border-top:1px solid var(--line2,#eeece6);scroll-margin-top:8px">
+      <h2 style="font-size:22px;font-weight:600;letter-spacing:-.5px;margin:0 0 24px">Achievements &amp; Certifications</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px">
+        <div style="background:var(--carddark,#232320);color:#f0efe9;border-radius:14px;padding:22px">
+          <div style="font-size:11px;letter-spacing:1.5px;color:#b8d4a8">SIH 2025</div>
+          <div style="font-size:16px;font-weight:600;margin-top:8px">National Finalist</div>
+          <div style="font-size:12px;line-height:1.6;color:var(--faint2,#a8a6a0);margin-top:6px">AI-driven precision pesticide system. Research lead; only second-year student on the team.</div>
+        </div>
+        <div style="background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:14px;padding:22px">
+          <div style="font-size:11px;letter-spacing:1.5px;color:var(--muted,#8b8981)">2020 – 2021</div>
+          <div style="font-size:16px;font-weight:600;margin-top:8px">Published a Unity game</div>
+          <div style="font-size:12px;line-height:1.6;color:var(--muted,#8b8981);margin-top:6px">Independently developed and released at age 15.</div>
+        </div>
+        <div style="background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:14px;padding:22px">
+          <div style="font-size:11px;letter-spacing:1.5px;color:var(--muted,#8b8981)">ANTHROPIC · 2026</div>
+          <div style="font-size:16px;font-weight:600;margin-top:8px">AI Fluency certifications ×2</div>
+          <div style="font-size:12px;line-height:1.6;color:var(--muted,#8b8981);margin-top:6px">Framework &amp; Foundations · AI Fluency for Small Businesses. Plus AI &amp; ML certification (2024).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PUBLICATION -->
+    <section id="publication" data-screen-label="Publication" style="padding:56px 64px;border-top:1px solid var(--line2,#eeece6);scroll-margin-top:8px">
+      <h2 style="font-size:22px;font-weight:600;letter-spacing:-.5px;margin:0 0 24px">Publication</h2>
+      <div style="background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:16px;padding:30px 34px;max-width:720px">
+        <div style="font-size:11px;letter-spacing:1.5px;color:var(--accent,#3d6ee0)">PREPRINT · ZENODO · MAY 15, 2025</div>
+        <div style="font-size:19px;font-weight:600;line-height:1.4;margin-top:10px">WILDFLOW: A Multimodal Retrieval-Augmented Academic Intelligence System</div>
+        <div style="font-size:13px;line-height:1.7;color:var(--sub,#71716c);margin-top:10px">Verification-driven RAG architecture enforcing strict knowledge boundaries at the system level — replacing prompt-based hallucination control with architectural constraints.</div>
+        <div onClick="{{ openWildflow }}" style="display:inline-block;margin-top:18px;font-size:12.5px;font-weight:600;color:var(--accent,#3d6ee0);cursor:pointer">Read the project story →</div>
+      </div>
+    </section>
+
+    <!-- RESEARCH -->
+    <section id="research" data-screen-label="Research" style="padding:56px 64px;border-top:1px solid var(--line2,#eeece6);scroll-margin-top:8px">
+      <h2 style="font-size:22px;font-weight:600;letter-spacing:-.5px;margin:0 0 24px">Research</h2>
+
+      <div style="font-size:10.5px;letter-spacing:2.5px;color:var(--muted,#8b8981);display:flex;align-items:center;gap:10px"><span>ONGOING</span><span style="flex:1;height:1px;background:var(--line,#e6e4de);max-width:640px"></span></div>
+      <div style="background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:16px;padding:28px 32px;max-width:720px;margin-top:14px">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:10.5px;background:#33422f;color:#4a7a48;padding:4px 11px;border-radius:99px;letter-spacing:.5px;background:#eaf2e6">ONGOING</span>
+          <span style="font-size:10.5px;background:var(--chipbg2,#eceae4);color:var(--sub2,#6d6b64);padding:4px 11px;border-radius:99px;letter-spacing:.5px">MARKETS</span>
+        </div>
+        <div style="font-size:17px;font-weight:600;line-height:1.4;margin-top:12px">ETF Arbitrage and Passive Flows in the Indian Stock Market</div>
+        <div style="font-size:13px;line-height:1.7;color:var(--sub,#71716c);margin-top:10px">A research project studying whether the rapid growth of passive investing has begun to distort the structure of India's flagship equity index, the Nifty 50, and whether ETF mispricing carries a short-horizon predictive signal for the underlying market.</div>
+      </div>
+
+      <div style="font-size:10.5px;letter-spacing:2.5px;color:var(--muted,#8b8981);display:flex;align-items:center;gap:10px;margin-top:32px"><span>COMPLETED</span><span style="flex:1;height:1px;background:var(--line,#e6e4de);max-width:640px"></span></div>
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:720px;margin-top:14px">
+        <div onClick="{{ openRbi }}" style="background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:14px;padding:20px 24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;transition:border-color .25s" style-hover="border-color:var(--linehover,#c8c5ba)">
+          <div>
+            <div style="font-size:14.5px;font-weight:600">RBI × Nifty 50</div>
+            <div style="font-size:12px;line-height:1.6;color:var(--muted,#8b8981);margin-top:4px">Event study of 26 RBI monetary-policy events on Nifty 50 returns, 2015–2025.</div>
+          </div>
+          <span style="font-size:12px;color:var(--accent,#3d6ee0);white-space:nowrap">View →</span>
+        </div>
+        <div onClick="{{ openIpo }}" style="background:var(--panel,#fff);border:1px solid var(--line,#e6e4de);border-radius:14px;padding:20px 24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;transition:border-color .25s" style-hover="border-color:var(--linehover,#c8c5ba)">
+          <div>
+            <div style="font-size:14.5px;font-weight:600">IPO Price Analysis</div>
+            <div style="font-size:12px;line-height:1.6;color:var(--muted,#8b8981);margin-top:4px">ML regression over subscription data, RHP signals and listing performance.</div>
+          </div>
+          <span style="font-size:12px;color:var(--accent,#3d6ee0);white-space:nowrap">View →</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHOTOGRAPHY (hidden for now — remove display:none to restore) -->
+    <section id="photography" data-screen-label="Photography" style="display:none;padding:56px 64px;border-top:1px solid var(--line2,#eeece6);scroll-margin-top:8px">
+      <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+        <h2 style="font-size:22px;font-weight:600;letter-spacing:-.5px;margin:0">Photography</h2>
+        <span style="font-size:12px;color:var(--muted,#8b8981)">A parallel practice — shot on two Canon point-and-shoots and a phone.</span>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:22px">
+        <sc-for list="{{ camFilters }}" as="f" hint-placeholder-count="4">
+          <div onClick="{{ f.pick }}" style="font-size:12px;padding:7px 16px;border-radius:99px;cursor:pointer;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.col }};transition:all .2s;display:flex;gap:7px;align-items:baseline"><span>{{ f.label }}</span><span style="opacity:.5;font-size:11px">{{ f.count }}</span></div>
+        </sc-for>
+      </div>
+
+      <div style="columns:3;column-gap:14px;margin-top:26px;max-width:1080px">
+        <sc-for list="{{ photos }}" as="ph" hint-placeholder-count="6">
+          <div onClick="{{ ph.open }}" style="break-inside:avoid;margin-bottom:14px;border-radius:12px;overflow:hidden;cursor:zoom-in;background:var(--chipbg2,#eceae4);border:1px solid var(--line,#e6e4de)">
+            <img src="{{ ph.src }}" alt="{{ ph.alt }}" loading="lazy" style="width:100%;display:block;transition:transform .4s ease" style-hover="transform:scale(1.03)">
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" data-screen-label="Contact" style="padding:72px 64px 88px;border-top:1px solid var(--line2,#eeece6);scroll-margin-top:8px">
+      <div style="font-size:12px;letter-spacing:2px;color:var(--muted,#8b8981)">GET IN TOUCH</div>
+      <a href="mailto:rohandeogaonkar.9@gmail.com" style="display:inline-block;font-size:clamp(24px,3.4vw,40px);font-weight:600;letter-spacing:-1px;margin-top:14px;color:var(--ink,#232320)" style-hover="color:var(--accent,#3d6ee0)">rohandeogaonkar.9@gmail.com ↗</a>
+      <div style="display:flex;gap:24px;margin-top:26px;font-size:13.5px;flex-wrap:wrap">
+        <a href="https://github.com/rohanbeingsocial" target="_blank" style="border:1px solid var(--line3,#e2dfd7);border-radius:99px;padding:10px 22px;background:var(--panel,#fff)">GitHub ↗</a>
+        <a href="{{ linkedinUrl }}" target="_blank" style="border:1px solid var(--line3,#e2dfd7);border-radius:99px;padding:10px 22px;background:var(--panel,#fff)">LinkedIn ↗</a>
+        <a href="{{ mediumUrl }}" target="_blank" style="border:1px solid var(--line3,#e2dfd7);border-radius:99px;padding:10px 22px;background:var(--panel,#fff)">Medium ↗</a>
+      </div>
+      <div style="font-size:11.5px;color:var(--faint,#a8a49a);margin-top:56px">© 2026 Rohan Deogaonkar · Pune, India</div>
+      <div style="font-size:11px;color:var(--faint,#a8a49a);margin-top:8px">Hand-coded as a single page · Space Grotesk · warm greys, no frameworks · Last updated July 2026</div>
+    </section>
+  </main>
+</div>
+
+<!-- PHOTO LIGHTBOX -->
+<sc-if value="{{ lightbox }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeLightbox }}" style="position:fixed;inset:0;background:rgba(22,22,20,.93);z-index:60;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px;cursor:zoom-out;animation:fadeUp .2s ease both">
+    {{ lightboxImg }}
+    <div style="display:flex;align-items:center;gap:20px;margin-top:20px;font-size:11px;letter-spacing:2px;color:var(--faint,#a8a49a)">
+      <span onClick="{{ prevPhoto }}" style="cursor:pointer;padding:7px 16px;border:1px solid rgba(255,255,255,.18);border-radius:99px;color:#e8e6df;transition:border-color .2s" style-hover="border-color:rgba(255,255,255,.45)">← PREV</span>
+      <span>{{ lightboxCam }} · {{ lightboxIdx }} / {{ lightboxTotal }}</span>
+      <span onClick="{{ nextPhoto }}" style="cursor:pointer;padding:7px 16px;border:1px solid rgba(255,255,255,.18);border-radius:99px;color:#e8e6df;transition:border-color .2s" style-hover="border-color:rgba(255,255,255,.45)">NEXT →</span>
+    </div>
+  </div>
+</sc-if>
+
+<!-- TERMINAL (press ~) -->
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:70;background:rgba(18,18,16,.97);border-top:1px solid #3a3a34;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;padding:16px 24px 18px;height:{{ termH }};display:{{ termDisp }};flex-direction:column;box-sizing:border-box;animation:fadeUp .22s ease both">
+    <div style="display:flex;justify-content:space-between;align-items:center;color:#6f6d65;font-size:10px;letter-spacing:2px;margin-bottom:10px"><span>ROHAN.SH</span><span onClick="{{ closeTerm }}" style="cursor:pointer" style-hover="color:#e8e6df">ESC ✕</span></div>
+    <sc-if value="{{ termGameOff }}" hint-placeholder-val="{{ true }}">
+      <div ref="{{ termOutRef }}" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:5px">
+        <sc-for list="{{ termLines }}" as="tl" hint-placeholder-count="1">
+          <div style="white-space:pre-wrap;color:{{ tl.col }};line-height:1.5">{{ tl.text }}</div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ termGame }}" hint-placeholder-val="{{ false }}">
+      <canvas ref="{{ gameRef }}" style="flex:1;width:100%;min-height:0;display:block;border:1px solid #2c2c27;border-radius:6px;background:#181816"></canvas>
+    </sc-if>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:12px;border-top:1px solid #2c2c27;padding-top:12px">
+      <span style="color:#8aa8f2">➜</span>
+      <input id="term-input" value="{{ termInput }}" onChange="{{ onTermInput }}" onKeyDown="{{ onTermKey }}" placeholder="help" style="flex:1;background:transparent;border:none;outline:none;color:#e8e6df;font-family:inherit;font-size:12.5px">
+    </div>
+  </div>
+
+<!-- ⌘K SEARCH OVERLAY -->
+<sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeSearch }}" style="position:fixed;inset:0;background:rgba(35,35,32,.35);backdrop-filter:blur(3px);z-index:50;display:flex;justify-content:center;align-items:flex-start;padding-top:12vh">
+    <div onClick="{{ stop }}" style="width:min(520px,90vw);background:var(--panel,#fff);border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.22);border:1px solid var(--line,#e6e4de);overflow:hidden;animation:fadeUp .25s ease both">
+      <div style="display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line2,#eeece6)">
+        <span style="color:var(--muted,#8b8981)">⌕</span>
+        <input ref="{{ focusRef }}" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Search projects, skills…" style="flex:1;border:none;outline:none;font-size:14.5px;font-family:'Space Grotesk',sans-serif;background:transparent;color:var(--ink,#232320)">
+        <span onClick="{{ closeSearch }}" style="font-size:10px;background:var(--chipbg,#f0efe9);padding:3px 8px;border-radius:5px;color:var(--muted,#8b8981);cursor:pointer">ESC</span>
+      </div>
+      <div style="padding:8px;max-height:340px;overflow-y:auto">
+        <div style="font-size:10px;color:var(--muted,#8b8981);padding:8px 12px 4px;letter-spacing:1.5px">PROJECTS</div>
+        <sc-for list="{{ results }}" as="r" hint-placeholder-count="3">
+          <div onClick="{{ r.pick }}" style="border-radius:9px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:10px" style-hover="background:#f4f2ec">
+            <div style="min-width:0"><div style="font-size:13.5px;font-weight:600">{{ r.title }}</div><div style="font-size:11px;color:var(--muted,#8b8981);margin-top:2px">{{ r.blurb }}</div></div>
+            <span style="font-size:11px;color:var(--muted,#8b8981)">↵</span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px 14px;font-size:13px;color:var(--muted,#8b8981)">Nothing matches "{{ query }}" — try "rag", "esp32", "charts"…</div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;grid&quot;,&quot;options&quot;:[&quot;grid&quot;,&quot;journey&quot;],&quot;tsType&quot;:&quot;'grid' | 'journey'&quot;,&quot;section&quot;:&quot;Explorer&quot;},&quot;motifsAnimated&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Explorer&quot;},&quot;linkedinUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://www.linkedin.com/in/rohandeogaonkar/&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contact&quot;},&quot;mediumUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://medium.com/@rohandeogaonkar.9&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contact&quot;}}">
+class Component extends DCLogic {
+  state = { view: null, cat: 'all', sel: null, searchOpen: false, query: '', typed: 'RAG architectures', photoCam: 'all', photoIdx: null,
+    dark: false, termOpen: false, termInput: '', toolSel: null, termGame: false,
+    termLines: [{ text: 'rohan.sh — interactive index. type "help" to explore.', col: '#75736b' }] };
+
+  applyTheme(dark) {
+    const r = document.documentElement.style;
+    const vars = { bg:'#1b1b19', panel:'#232320', carddark:'#111110', ink:'#f0efe9', sub:'#b3b1a9', sub2:'#a9a79f',
+      muted:'#8f8d85', faint:'#75736b', faint2:'#8a887f', faint3:'#6f6d65', line:'#33332e', line2:'#2c2c27',
+      line3:'#3a3a34', line4:'#3a3a34', line5:'#4a4a43', linehover:'#55534c', chipbg:'#2f2f2a', chipbg2:'#2c2c27',
+      chipink:'#c8c6be', accent:'#8aa8f2', selbg:'#f0efe9', selink:'#1b1b19' };
+    Object.entries(vars).forEach(([k, v]) => dark ? r.setProperty('--' + k, v) : r.removeProperty('--' + k));
+  }
+
+  toggleTheme(e) {
+    const dark = !this.state.dark;
+    const apply = () => {
+      this.setState({ dark });
+      try { localStorage.setItem('rohan-theme', dark ? 'dark' : 'light'); } catch (err) {}
+      this.applyTheme(dark);
+    };
+    if (!document.startViewTransition) { apply(); return; }
+    // circular reveal from the toggle button
+    const x = (e && e.clientX) || 130, y = (e && e.clientY) || window.innerHeight - 120;
+    const r = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+    const vt = document.startViewTransition(apply);
+    vt.ready.then(() => {
+      document.documentElement.animate(
+        { clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + r + 'px at ' + x + 'px ' + y + 'px)'] },
+        { duration: 650, easing: 'cubic-bezier(.22,1,.36,1)', pseudoElement: '::view-transition-new(root)' }
+      );
+    }).catch(() => {});
+  }
+
+  runTerm() {
+    const cmd = this.state.termInput.trim();
+    if (!cmd) return;
+    const projects = this.getProjects();
+    const out = [];
+    const push = (t, c) => out.push({ text: t, col: c || '#c8c6be' });
+    const parts = cmd.split(/\s+/); const c0 = parts[0].toLowerCase(); const arg = parts.slice(1).join(' ').toLowerCase();
+    if (c0 === 'help') {
+      push('ls              list all projects');
+      push('cat <id>        project details (e.g. cat wildflow)');
+      push('open <target>   github | linkedin | medium');
+      push('play            candle runner — buy dips, dodge red candles');
+      push('whoami · theme · clear · exit');
+    } else if (c0 === 'ls') {
+      push(projects.map(p => p.id).join('  '), '#b8d4a8');
+    } else if (c0 === 'cat') {
+      const p = projects.find(p => p.id === arg);
+      if (p) { push(p.title + ' — ' + p.year, '#f0efe9'); push(p.blurb); push(p.stack, '#8aa8f2'); if (p.url) push(p.url, '#8aa8f2'); }
+      else push("cat: '" + arg + "': no such project — try ls", '#e0a08a');
+    } else if (c0 === 'whoami') {
+      push('rohan — one engineer across software, silicon & markets · MIT-WPU, Pune');
+    } else if (c0 === 'open') {
+      const urls = { github: 'https://github.com/rohanbeingsocial', linkedin: this.props.linkedinUrl ?? 'https://www.linkedin.com/', medium: this.props.mediumUrl ?? 'https://medium.com/' };
+      if (urls[arg]) { window.open(urls[arg], '_blank'); push('opening ' + arg + '…'); }
+      else push('open: github | linkedin | medium', '#e0a08a');
+    } else if (c0 === 'play') {
+      this.setState({ termGame: true, termInput: '',
+        termLines: [...this.state.termLines, { text: '➜ play', col: '#8aa8f2' }, { text: 'candle runner — SPACE to jump · Q to quit', col: '#75736b' }] });
+      return;
+    } else if (c0 === 'theme') {
+      this.toggleTheme(); push('theme toggled');
+    } else if (c0 === 'clear') {
+      this.setState({ termLines: [], termInput: '' }); return;
+    } else if (c0 === 'exit') {
+      this.setState({ termOpen: false, termInput: '' }); return;
+    } else {
+      push(c0 + ': command not found — try help', '#e0a08a');
+    }
+    this.setState({ termLines: [...this.state.termLines, { text: '➜ ' + cmd, col: '#8aa8f2' }, ...out], termInput: '' });
+    setTimeout(() => { const el = this._termOut; if (el) el.scrollTop = el.scrollHeight; }, 50);
+  }
+
+  getPhotos() {
+    const p = (cam, label, files) => files.map(f => ({ cam, label, src: f }));
+    return [
+      ...p('ix115', 'Canon IXUS 115 HS', ['Ixus115/8IMG_4146.JPG','Ixus115/IMG_4328.JPG','Ixus115/IMG_2714.JPG','Ixus115/IMG_5784.JPG','Ixus115/7IMG_3602.JPG','Ixus115/IMG_5105.JPG','Ixus115/5IMG_3421.JPG','Ixus115/IMG_3192.JPG']),
+      ...p('ix970', 'Canon IXUS 970 IS', ['Ixus970/IMG_0002.JPG','Ixus970/IMG_0086.JPG','Ixus970/IMG_0364.JPG','Ixus970/IMG_2767.JPG','Ixus970/IMG_0220.JPG','Ixus970/IMG_0557.JPG']),
+      ...p('iphone', 'iPhone 16 Pro', ['Iphone16pro/IMG_2963.jpg','Iphone16pro/IMG_3072.png','Iphone16pro/IMG_2933.jpg','Iphone16pro/IMG_3131.png','Iphone16pro/IMG_2466.jpg'])
+    ];
+  }
+
+  getVisiblePhotos() {
+    const all = this.getPhotos();
+    return this.state.photoCam === 'all' ? all : all.filter(p => p.cam === this.state.photoCam);
+  }
+
+  navPhoto(dir) {
+    const s = this.state;
+    if (s.photoIdx == null) return;
+    const n = this.getVisiblePhotos().length;
+    this.setState({ photoIdx: (s.photoIdx + dir + n) % n });
+  }
+
+  startTyper() {
+    const words = ['RAG architectures', 'embedded systems', 'trading infrastructure', 'open-source libraries', 'agentic tools'];
+    let wi = 0, ci = words[0].length, deleting = false;
+    const tick = () => {
+      const w = words[wi];
+      if (!deleting) {
+        ci++;
+        if (ci >= w.length) { ci = w.length; deleting = true; this.setState({ typed: w }); this.typerT = setTimeout(tick, 2400); return; }
+      } else {
+        ci--;
+        if (ci <= 0) { ci = 0; deleting = false; wi = (wi + 1) % words.length; }
+      }
+      this.setState({ typed: (deleting ? w : words[wi]).slice(0, ci) || '\u00a0' });
+      this.typerT = setTimeout(tick, deleting ? 40 : 80);
+    };
+    this.typerT = setTimeout(tick, 2400);
+  }
+
+  loadGithub() {
+    const user = 'rohanbeingsocial';
+    // Contributions heatmap (community API over GitHub's contribution graph)
+    fetch('https://github-contributions-api.jogruber.de/v4/' + user + '?y=last')
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        const days = data.contributions || [];
+        const total = days.reduce((a, d) => a + d.count, 0);
+        this.setState({ ghDays: days, ghTotal: total });
+      })
+      .catch(() => this.setState({ ghDays: 'fail' }));
+    // Recent commits: latest PushEvent per repo, then fetch each head commit's message
+    fetch('https://api.github.com/users/' + user + '/events/public?per_page=30')
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(evs => {
+        const picks = [];
+        for (const ev of evs) {
+          if (ev.type !== 'PushEvent' || !ev.payload || !ev.payload.head) continue;
+          if (picks.some(p => p.repoFull === ev.repo.name)) continue; // one per repo
+          picks.push({ repoFull: ev.repo.name, head: ev.payload.head, at: ev.created_at });
+          if (picks.length >= 3) break;
+        }
+        return Promise.all(picks.map(p =>
+          fetch('https://api.github.com/repos/' + p.repoFull + '/commits/' + p.head)
+            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(c => ({
+              repo: p.repoFull.split('/')[1],
+              msg: ((c.commit && c.commit.message) || '').split('\n')[0],
+              when: this.relTime(new Date(p.at)),
+              url: 'https://github.com/' + p.repoFull + '/commit/' + p.head,
+            }))
+            .catch(() => null)
+        ));
+      })
+      .then(list => {
+        const out = (list || []).filter(Boolean);
+        this.setState({ ghCommits: out.length ? out : 'fail' });
+      })
+      .catch(() => this.setState({ ghCommits: 'fail' }));
+  }
+
+  relTime(d) {
+    const s = (Date.now() - d.getTime()) / 1000;
+    if (s < 3600) return Math.max(1, Math.round(s / 60)) + 'm ago';
+    if (s < 86400) return Math.round(s / 3600) + 'h ago';
+    return Math.round(s / 86400) + 'd ago';
+  }
+
+  componentDidMount() {
+    this.loadGithub();
+    this.startTyper();
+    try {
+      if (localStorage.getItem('rohan-theme') === 'dark') { this.setState({ dark: true }); this.applyTheme(true); }
+    } catch (e) {}
+    this.keyHandler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        this.setState({ searchOpen: true, query: '' });
+      } else if (this.state.termGame && (e.code === 'Space' || e.key === ' ')) {
+        e.preventDefault();
+        this.gameJump();
+      } else if (this.state.termGame && (e.key === 'q' || e.key === 'Q')) {
+        e.preventDefault();
+        this.stopGame();
+        this.setState({ termGame: false, termLines: [...this.state.termLines, { text: 'run closed — P&L booked. type play to re-enter the market.', col: '#75736b' }] });
+      } else if (e.key === 'Escape') {
+        this.stopGame();
+        this.setState({ searchOpen: false, sel: null, photoIdx: null, termOpen: false, termGame: false });
+      } else if ((e.key === '~' || e.key === '`') && !/INPUT|TEXTAREA/.test(e.target.tagName)) {
+        e.preventDefault();
+        const opening = !this.state.termOpen;
+        this.setState({ termOpen: opening });
+        if (opening) setTimeout(() => { const i = document.getElementById('term-input'); if (i) i.focus(); }, 80);
+      } else if (this.state.photoIdx != null && e.key === 'ArrowLeft') {
+        this.navPhoto(-1);
+      } else if (this.state.photoIdx != null && e.key === 'ArrowRight') {
+        this.navPhoto(1);
+      }
+    };
+    window.addEventListener('keydown', this.keyHandler);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this.keyHandler); clearTimeout(this.typerT); this.stopGame(); }
+
+  // ---- candle runner (terminal `play`) ----
+  startGame(canvas) {
+    this.stopGame();
+    const dpr = window.devicePixelRatio || 1;
+    const cw = canvas.clientWidth || 600, ch = canvas.clientHeight || 160;
+    canvas.width = cw * dpr; canvas.height = ch * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    let hi = 0; try { hi = parseInt(localStorage.getItem('rohan-runner-hi') || '0', 10) || 0; } catch (e) {}
+    const g = this._g = {
+      ctx, cw, ch, ground: ch - 26, px: 64, py: 0, vy: 0, speed: 3.4,
+      candles: [], dist: 0, nextAt: 200, pnl: 0, hi, over: false, raf: null,
+    };
+    g.py = g.ground;
+    const spawn = () => {
+      const green = Math.random() < 0.6;
+      const h = 22 + Math.random() * (green ? 34 : 26);
+      g.candles.push({ x: g.cw + 20, w: 11, h, green, passed: false });
+      g.nextAt = 120 + Math.random() * 130;
+    };
+    const step = () => {
+      if (!this._g || this._g !== g) return;
+      if (!g.over) {
+        g.dist += g.speed;
+        g.speed = Math.min(6.5, g.speed + 0.0008);
+        g.nextAt -= g.speed;
+        if (g.nextAt <= 0) spawn();
+        // physics
+        g.vy += 0.55; g.py += g.vy;
+        if (g.py >= g.ground) { g.py = g.ground; g.vy = 0; }
+        for (const c of g.candles) {
+          c.x -= g.speed;
+          const top = g.ground + 8 - c.h;
+          const hitX = g.px + 7 > c.x && g.px - 7 < c.x + c.w;
+          if (hitX && g.py + 7 > top + 2) {
+            if (c.green) { if (!c.passed) { c.passed = true; g.pnl += 150; } }
+            else { g.over = true; g.hi = Math.max(g.hi, g.pnl); try { localStorage.setItem('rohan-runner-hi', String(g.hi)); } catch (e) {} }
+          } else if (!c.passed && c.x + c.w < g.px - 7) { c.passed = true; g.pnl += c.green ? 150 : 60; }
+        }
+        g.candles = g.candles.filter(c => c.x > -30);
+      }
+      this.drawGame(g);
+      g.raf = requestAnimationFrame(step);
+    };
+    g.raf = requestAnimationFrame(step);
+  }
+
+  drawGame(g) {
+    const { ctx, cw, ch } = g;
+    ctx.clearRect(0, 0, cw, ch);
+    // baseline grid
+    ctx.strokeStyle = '#26261f'; ctx.lineWidth = 1;
+    for (let y = 20; y < ch; y += 26) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(cw, y); ctx.stroke(); }
+    ctx.strokeStyle = '#33332e'; ctx.beginPath(); ctx.moveTo(0, g.ground + 8); ctx.lineTo(cw, g.ground + 8); ctx.stroke();
+    // candles
+    for (const c of g.candles) {
+      ctx.fillStyle = c.green ? '#5e9e6e' : '#b0574f';
+      const top = g.ground + 8 - c.h;
+      ctx.fillRect(c.x, top, c.w, c.h);
+      ctx.strokeStyle = ctx.fillStyle;
+      ctx.beginPath(); ctx.moveTo(c.x + c.w / 2, top - 7); ctx.lineTo(c.x + c.w / 2, top); ctx.stroke();
+    }
+    // player
+    ctx.fillStyle = '#f0efe9';
+    ctx.beginPath(); ctx.arc(g.px, g.py, 7, 0, Math.PI * 2); ctx.fill();
+    // HUD
+    ctx.font = '11px ui-monospace, Menlo, monospace';
+    ctx.fillStyle = '#75736b'; ctx.textAlign = 'left';
+    ctx.fillText('CANDLE RUNNER · SPACE jump · Q quit', 12, 18);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#9ad1a0';
+    ctx.fillText('P&L: +\u20B9' + g.pnl + '  ·  HI: +\u20B9' + Math.max(g.hi, g.pnl), cw - 12, 18);
+    if (g.over) {
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#f0efe9'; ctx.font = '600 15px ui-monospace, Menlo, monospace';
+      ctx.fillText('rekt by a red candle \u2014 P&L +\u20B9' + g.pnl, cw / 2, ch / 2 - 8);
+      ctx.fillStyle = '#75736b'; ctx.font = '11px ui-monospace, Menlo, monospace';
+      ctx.fillText('SPACE to re-enter \u00B7 Q to quit', cw / 2, ch / 2 + 14);
+    }
+  }
+
+  gameJump() {
+    const g = this._g;
+    if (!g) return;
+    if (g.over) { const canvas = g.ctx.canvas; this._g = null; this.startGame(canvas); return; }
+    if (g.py >= g.ground - 0.5) g.vy = -11.5;
+  }
+
+  stopGame() {
+    if (this._g) { cancelAnimationFrame(this._g.raf); this._g = null; }
+  }
+
+  flipPanel(el) {
+    if (!el || el.dataset.flipped) return;
+    el.dataset.flipped = '1';
+    const o = this._originRect;
+    this._originRect = null;
+    if (!o) return;
+    const r = el.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const dx = o.left - r.left, dy = o.top - r.top;
+    const sc = o.width / r.width;
+    el.animate([
+      { transformOrigin: '0 0', transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + sc + ')', opacity: 0.2 },
+      { transformOrigin: '0 0', transform: 'none', opacity: 1 }
+    ], { duration: 500, easing: 'cubic-bezier(.22,1,.36,1)' });
+  }
+
+  getProjects() {
+    const gh = (r) => 'https://github.com/rohanbeingsocial/' + r;
+    return [
+      { id:'wildflow', title:'Wildflow', cat:'ai', motif:'cluster', year:'Jan – Apr 2025', role:'Independent research', output:'Paper + system', status:'PREPRINT · ZENODO', video:'uploads/wildflow-demo-60fps.mp4',
+        blurb:'Multimodal RAG academic-intelligence framework with verification-driven architecture.',
+        desc:'A multimodal RAG framework that replaces prompt-based hallucination control with architectural constraints — unit-level vector isolation, deterministic JSON topic routing, KaTeX equation-integrity verification, and multi-stage validation before any response is surfaced. A multi-model Gemini pipeline selects models by query type: Flash for theory, 2.5 Pro for numerical reasoning, a two-stage pipeline for engineering graphics.',
+        stack:'Python · Qdrant · Gemini API · nomic-embed · Surya OCR · KaTeX · Firebase · React · Node.js', url:gh('wildflow'), demo:'https://rohanbeingsocial.github.io/wildflow/', paper:'https://zenodo.org/records/20620570', sort:2025.1, pinned:true },
+      { id:'candlekit', title:'CandleKit Charts', cat:'fin', motif:'candles', year:'May 2026', role:'Solo maintainer', output:'v0.1.0 · MIT', status:'OPEN SOURCE', video:'uploads/readme-scroll-styled-60fps.mp4',
+        blurb:'Tree-shakeable financial charting toolkit — drawing tools, indicators, replay.',
+        desc:'An open-source charting toolkit built over TradingView\'s Lightweight Charts: a drawing engine (trendlines, rays, Fibonacci, rectangles) with selection, reshaping and persistence; an indicator framework with a built-in catalog (SMA, EMA, RSI, MACD, Bollinger, Stochastic) plus a one-call API for custom indicators; a shift-drag measurement ruler; and a deterministic replay engine for backtesting. Framework-agnostic core with React bindings.',
+        stack:'TypeScript · React · Lightweight Charts · ESM/CJS', url:gh('candlekit-charts'), demo:'https://rohanbeingsocial.github.io/candlekit-charts/workspace/', sort:2026.4, pinned:true },
+      { id:'rbi', title:'RBI × Nifty 50', cat:'fin', motif:'candles', year:'Apr 2026', role:'Independent research', output:'Event study', status:'RESEARCH', video:'uploads/demo.mp4',
+        blurb:'Empirical event study of 26 RBI monetary-policy events, 2015–2025.',
+        desc:'Quantified the impact of 26 RBI monetary-policy events on Nifty 50 returns using event-study methodology — rate hikes vs. cuts, expected vs. surprise decisions, and inflation trends. Custom dataset assembled from RBI and market sources.',
+        stack:'Python · Pandas · Event-study methodology · Excel', url:gh('repoeffectonmarket'), demo:'https://rohanbeingsocial.github.io/repoeffectonmarket/', sort:2026.3 },
+      { id:'smarthome', title:'SmartHome', cat:'hw', motif:'pulse', year:'May 2025', role:'Independent IoT research', output:'Working prototype', status:'HARDWARE',
+        blurb:'Retrofit energy management — custom ESP32 smart plug + TinyML edge inference.',
+        desc:'A retrofit IoT system for household energy optimization using IR, PIR and CO2 sensor fusion — no rewiring, works with legacy appliances. Custom smart plug (ESP32 + SSR + ACS712) acting as relay, power monitor and data logger over MQTT, feeding a TinyML edge controller. Full security stack: MQTT over TLS, per-device auth, AES-256 at rest. Unit cost ₹700–900 DIY, ₹500–650 at scale.',
+        stack:'ESP32 · Raspberry Pi Pico · Python · FastAPI · TinyML · MQTT', url:null, sort:2025.6 },
+      { id:'sih', title:'Precision Pesticide System', cat:'hw', motif:'pulse', year:'Dec 2025', role:'Research lead', output:'Hardware prototype', status:'SIH NATIONAL FINALIST',
+        blurb:'AI-driven sprinkler calibrated by plant infection level — SIH 2025 finals, Jalandhar.',
+        desc:'Hardware prototype for AI-driven precision pesticide spraying, calibrated per-plant by infection level. Judged commercially viable at the Smart India Hackathon national finals. Research lead on team TheVisioneers — the only second-year student among six.',
+        stack:'Embedded hardware · Computer vision · Agriculture', url:null, sort:2025.9 },
+      { id:'predmarket', title:'Polymarket Tracker', cat:'fin', motif:'ticker', year:'Apr 2026', role:'Solo build', output:'Live system', status:'LIVE SYSTEM',
+        blurb:'Real-time smart-money tracking — detects high-conviction trades from top wallets.',
+        desc:'A real-time tracking system monitoring top-performing wallets on Polymarket, detecting high-conviction trades and generating actionable signals based on smart-money behavior instead of blind copy trading.',
+        stack:'Python · Polymarket API · Signal generation', url:gh('predictionmarket'), sort:2025.8 },
+      { id:'railway', title:'Railway Perpetual', cat:'fin', motif:'ticker', year:'Apr 2026', role:'Solo build', output:'Deployed on Railway', status:'DEPLOYED',
+        blurb:'100+ wallet monitor logging entries/exits to study slippage and conviction patterns.',
+        desc:'A Polymarket wallet-tracking system deployed on Railway: monitors 100+ wallets in real time, captures entry/exit activity, and logs trades to Excel — built to study smart-money behavior, measure slippage, and identify high-conviction patterns.',
+        stack:'Python · Railway · Excel automation', url:gh('railwayperpetual'), sort:2026.2 },
+      { id:'ipo', title:'IPO Price Analysis', cat:'fin', motif:'candles', year:'Jul 2025', role:'Independent research', output:'ML analysis', status:'RESEARCH',
+        blurb:'ML regression over subscription data, RHP signals and listing performance.',
+        desc:'Analyzed IPO listing performance using QIB/HNI/retail subscription data, issue size, lot structure, sector and RHP signals. Applied ML regression and correlation analysis on a custom dataset built from public sources.',
+        stack:'Python · scikit-learn · Feature engineering', url:null, sort:2025.7 },
+      { id:'iporadar', title:'IPO Radar / RHP Analyst', cat:'fin', motif:'candles', year:'Jul 2026', role:'Solo build', output:'Self-updating dashboard · MIT', status:'OPEN SOURCE',
+        blurb:'Drop in an Indian IPO prospectus, get an explainable 0–100 investment score.',
+        desc:'Upload an Indian IPO Red Herring Prospectus (RHP PDF) and get an institutional-style research report: extracted restated financials, valuation vs the issuer\'s own peer set, a 13-class risk heatmap, forensic earnings-quality screens, promoter/governance analysis and a fully deterministic 0–100 score — every point traceable to a rule, the number it applied to, and the PDF page it was read from. A daily GitHub Actions job self-updates the public dashboard: pulls new mainboard IPOs, finds each RHP in SEBI\'s archive, runs the pipeline, refreshes real price outcomes, and recomputes 6m/12m/24m horizon forecasts. Optional Claude layer only rewrites narrative and answers document Q&A, always constrained to cited evidence.',
+        stack:'Python · FastAPI · PyMuPDF · Next.js · gradient-boosted trees · Claude API', url:gh('ipo-radar'), demo:'https://rohanbeingsocial.github.io/ipo-radar/', sort:2026.75 },
+      { id:'library', title:'MitWPU Library', cat:'sw', motif:'nodes', year:'Jul 2026', role:'Solo build', output:'Live deployment', status:'LIVE SYSTEM',
+        blurb:'A campus digital library — every note, paper and lab manual, searchable in ms.',
+        desc:'A college digital library organizing every note, previous-year paper and lab manual by course → year → semester → subject — full-text search including inside PDFs, a first-class in-browser PDF reader with night mode and resume, drag-drop uploads with client-side dedup, a moderation queue, collections, a requests board and a ⌘K palette. Deliberately quiet design: white, typographic, no engagement metrics. Fastify 5 + Drizzle + PGlite (Postgres-in-WASM for dev, swap DATABASE_URL for hosted Postgres); content-addressed SHA-256 file storage; self-contained session auth.',
+        stack:'React 19 · Vite · Fastify · Drizzle ORM · PGlite / Postgres · TypeScript', url:gh('MitWpu-Library'), demo:'https://mitwpu-library.onrender.com', sort:2026.85 },
+      { id:'nicmar', title:'Concrete Sensor Networks', cat:'hw', motif:'pulse', year:'Feb 2026', role:'Sensor integration', output:'2 engagements', status:'NICMAR COLLAB',
+        blurb:'DS18B20 sensors inside road concrete + piezoelectric micro-crack detection.',
+        desc:'Two research engagements with NICMAR University: embedding DS18B20 temperature sensors inside concrete to study thermal behavior of road surfaces (calibration + embedded DAQ design), and deploying piezoelectric sensors for structural health monitoring with threshold-based micro-crack detection.',
+        stack:'DS18B20 · Piezoelectric sensors · Embedded DAQ', url:null, sort:2025.5 },
+      { id:'datacleaner', title:'tidysheet', cat:'sw', motif:'nodes', year:'Jul 2026', role:'Solo build', output:'Python CLI + web UI · v0.2 · MIT', status:'OPEN SOURCE', video:'uploads/datacleaner-demo.mp4',
+        blurb:'Local-first data profiling & cleaning with reproducible, exportable pipelines.',
+        desc:'Point it at a messy CSV/Excel/Parquet/JSON file — it profiles the data on DuckDB, proposes a cleaning pipeline you review as plain YAML, previews every step before it applies, and exports the whole thing as standalone pandas, Polars, or SQL code you own. Can reverse-engineer a verified pipeline from a hand-edited Excel file, and fails loudly on value drift in scheduled re-runs. No data ever leaves your machine.',
+        stack:'Python · DuckDB · FastAPI · pandas / Polars / SQL export', url:gh('tidysheet'), sort:2026.8 },
+      { id:'docproof', title:'DocProof', cat:'ai', motif:'nodes', year:'Jul 2026', role:'Solo build', output:'npm CLI · v0.1.0 · MIT', status:'OPEN SOURCE', video:'uploads/docproof.mp4',
+        blurb:'Rewrites docs to any reading level — with proof that no fact was lost.',
+        desc:'A CLI that rewrites documentation for the audience you pick — grade 6 through professional — then checks its own work: every version number, command, flag, limit and warning in the original is extracted and hunted down in the rewrite; lost facts are repaired or reported loudly. Deterministic exact-fact pass needs no LLM; code fences never reach the model. Stable exit codes gate CI.',
+        stack:'TypeScript · Node.js · Claude / OpenAI / Ollama providers', url:gh('docproof'), demo:'https://rohanbeingsocial.github.io/docproof/', sort:2026.7 },
+      { id:'complycheck', title:'ComplyCheck', cat:'ai', motif:'nodes', year:'Jul 2026', role:'Solo build', output:'CLI + wizard', status:'OPEN SOURCE', video:'uploads/complycheck.mp4',
+        blurb:'Deterministic, local-first compliance orientation — CLI, codebase scanner, wizard.',
+        desc:'Answers "which regulations apply to your business?" deterministically and locally — a CLI, a codebase scanner, and a browser wizard for compliance orientation. Orientation only, not legal advice.',
+        stack:'TypeScript · Node.js · Static analysis', url:gh('complycheck'), demo:'https://rohanbeingsocial.github.io/complycheck/', sort:2026.5 },
+      { id:'commander', title:'Claude Commander', cat:'ai', motif:'nodes', year:'Jul 2026', role:'Solo build', output:'Desktop app', status:'OPEN SOURCE', video:'uploads/claude-commander.mp4',
+        blurb:'Operator-Claude delegating to worker Claudes across accounts, with failover.',
+        desc:'One agentic workflow across every usage pool you own: an operator Claude delegates to worker Claudes across accounts via local MCP, with zero-context-loss failover and auto-wake on limit reset. A local-first ops center for Claude Code.',
+        stack:'Tauri 2 · React · MCP · Rust', url:gh('claude-commander'), demo:'https://rohanbeingsocial.github.io/claude-commander/', sort:2026.6, pinned:true },
+      { id:'mitwpumap', title:'MIT-WPU Map', cat:'sw', motif:'nodes', year:'Mar 2026', role:'Solo build', output:'Navigation system', status:'PROJECT', video:'uploads/campus-map.mp4',
+        blurb:'Campus navigation modeling MIT-WPU as a graph — Dijkstra shortest paths.',
+        desc:'An interactive campus navigation system that models MIT-WPU as a graph and computes shortest paths with Dijkstra\'s algorithm — visual route mapping, distance calculation, and structured graph representations.',
+        stack:'Graph algorithms · Dijkstra · Visualization', url:gh('mitwpumap'), demo:'https://mitwpumap.lovable.app/', sort:2025.4 },
+      { id:'raspicam', title:'raspicam', cat:'hw', motif:'pulse', year:'2025', role:'Solo build', output:'Physical device', status:'HARDWARE',
+        blurb:'DIY handheld digicam on Raspberry Pi 4B with an early-2000s aesthetic.',
+        desc:'A handheld digital camera built on a Raspberry Pi 4B — captures photos with a nostalgic early-2000s digicam look. Enclosure, camera module integration, and capture software.',
+        stack:'Raspberry Pi 4B · Python · Camera module', url:gh('raspicam'), sort:2025.3 },
+    ];
+  }
+
+  ghVals() {
+    const s = this.state;
+    const dark = s.dark;
+    const scale = dark
+      ? ['#2c2c27', '#2e4232', '#3d5f44', '#4f8259', '#6cab74']
+      : ['#eeece6', '#cfe0c8', '#9cc492', '#69a873', '#3f8a55'];
+    let days = s.ghDays;
+    let sample = false;
+    if (!days || days === 'fail') {
+      // deterministic placeholder while loading / offline
+      sample = true;
+      days = Array.from({ length: 364 }, (_, i) => {
+        const h = Math.abs(Math.sin(i * 12.9898) * 43758.5453) % 1;
+        const lvl = h > 0.88 ? 4 : h > 0.74 ? 3 : h > 0.58 ? 2 : h > 0.42 ? 1 : 0;
+        return { date: '', count: 0, level: lvl };
+      });
+    }
+    // trim to whole weeks, most recent 52
+    const weeks = [];
+    for (let i = Math.max(0, days.length - 364); i < days.length; i += 7) {
+      const wk = days.slice(i, i + 7);
+      if (wk.length < 7) break;
+      weeks.push({ days: wk.map(d => ({
+        color: scale[Math.min(4, d.level ?? 0)],
+        tip: d.date ? d.date + ' · ' + d.count + (d.count === 1 ? ' contribution' : ' contributions') : '',
+      })) });
+    }
+    // no fake commits: hide the row until real data arrives (or on failure)
+    const ghCommits = Array.isArray(s.ghCommits) ? s.ghCommits : [];
+    const ghMeta = sample
+      ? (s.ghDays === 'fail' ? 'github.com/rohanbeingsocial' : 'loading…')
+      : s.ghTotal + ' contributions in the last year · live via GitHub';
+    return { ghWeeks: weeks, ghCommits, ghMeta };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const view = s.view ?? (this.props.defaultView ?? 'grid');
+    const play = this.props.motifsAnimated === false ? 'paused' : 'running';
+    const all = this.getProjects();
+
+    const catMeta = {
+      ai:  { label:'AI & ML',        short:'AI · ML',   tagBg:'#eef1ea', tagCol:'#5e7050', mBg:{cluster:'#1d2a1f',nodes:'#26221c'} },
+      hw:  { label:'Hardware & IoT', short:'HARDWARE',  tagBg:'#e9edf3', tagCol:'#4a6285' },
+      fin: { label:'Finance & Markets', short:'FINANCE', tagBg:'#efeae2', tagCol:'#8a6d3f' },
+      sw:  { label:'Software & Tools', short:'SOFTWARE', tagBg:'#f2e9ee', tagCol:'#8a5570' },
+    };
+    const motifBg = { cluster:'#1d2a1f', candles:'#241f1a', pulse:'#1a2028', ticker:'#201a24', nodes:'#26221c' };
+
+    const decorate = (p) => ({
+      ...p,
+      catLabel: catMeta[p.cat].label,
+      catShort: catMeta[p.cat].short,
+      tagBg: catMeta[p.cat].tagBg,
+      tagCol: catMeta[p.cat].tagCol,
+      mBg: motifBg[p.motif],
+      mCandles: p.motif === 'candles',
+      mCluster: p.motif === 'cluster',
+      mPulse: p.motif === 'pulse',
+      mTicker: p.motif === 'ticker',
+      mNodes: p.motif === 'nodes',
+      open: (e) => {
+        const card = e && e.currentTarget && e.currentTarget.closest ? e.currentTarget : null;
+        this._originRect = (card && s.sel !== p.id) ? card.getBoundingClientRect() : null;
+        this.setState({ sel: s.sel === p.id ? null : p.id, searchOpen: false });
+      },
+      isSel: s.sel === p.id,
+      cardDisp: s.sel === p.id ? 'none' : 'block',
+      panelRef: (el) => this.flipPanel(el),
+      hasVideo: !!p.video,
+      yearNum: String(Math.floor(p.sort)),
+    });
+
+    const decorated = all.map(decorate).sort((a, b) => b.sort - a.sort);
+    const filtered = s.cat === 'all' ? decorated : decorated.filter(p => p.cat === s.cat);
+    const pinnedShown = filtered.filter(p => p.pinned);
+    const shown = filtered.filter(p => !p.pinned);
+    const hasPinned = pinnedShown.length > 0;
+    const selRaw = decorated.find(p => p.id === s.sel) || null;
+
+    const cats = [
+      { key:'all', label:'All projects' },
+      { key:'ai', label:'AI & ML' },
+      { key:'hw', label:'Hardware & IoT' },
+      { key:'fin', label:'Finance & Markets' },
+      { key:'sw', label:'Software & Tools' },
+    ].map(c => ({
+      ...c,
+      count: c.key === 'all' ? all.length : all.filter(p => p.cat === c.key).length,
+      bg: s.cat === c.key ? 'var(--ink,#232320)' : 'transparent',
+      col: s.cat === c.key ? 'var(--bg,#f7f6f3)' : 'var(--sub2,#6d6b64)',
+      pick: () => this.setState({ cat: c.key, view: 'grid', sel: null }),
+    }));
+
+    const byId = Object.fromEntries(decorated.map(p => [p.id, p]));
+    const chip = (id, note) => ({
+      title: byId[id].title, note: note || '',
+      bg:'var(--panel,#fff)', col:'var(--ink,#232320)', border:'var(--line,#e6e4de)', noteCol:'var(--muted,#8b8981)', cursor:'pointer',
+      open: byId[id].open,
+    });
+    const marker = (title, note) => ({
+      title, note: note || '', bg:'transparent', col:'var(--sub2,#6d6b64)', border:'var(--line4,#e0ddd4)', noteCol:'var(--faint,#a8a49a)', cursor:'default', open: undefined,
+    });
+    const journey = [
+      { year:'2020 – 21', label:'First builds', dot:'var(--line5,#d8d5cc)', items:[ marker('Unity game','published'), marker('Discord community','400+ members') ] },
+      { year:'2022', label:'First job', dot:'#c4c0b4', items:[ marker('MTXL — Voice AI automation','ongoing') ] },
+      { year:'2024', label:'Foundations · started B.Tech at MIT-WPU', dot:'var(--faint,#a8a49a)', items:[ marker('Python & ML foundations','first projects') ] },
+      { year:'2025', label:'Research year', dot:'var(--sub2,#6d6b64)', items:[ chip('wildflow','published ✦'), chip('smarthome'), chip('nicmar'), chip('ipo'), chip('sih','national finalist ✦'), chip('raspicam'), chip('mitwpumap'), chip('predmarket') ] },
+      { year:'2026', label:'Open source & markets', dot:'var(--ink,#232320)', items:[
+        { ...chip('candlekit','v0.1.0 · MIT'), bg:'var(--carddark,#232320)', col:'#f0efe9', border:'var(--carddark,#232320)', noteCol:'var(--faint,#a8a49a)' },
+        chip('rbi'), chip('railway'), chip('complycheck'), chip('commander'), chip('docproof'), chip('datacleaner'), chip('iporadar'), chip('library'), marker('Anthropic AI Fluency ×2','certified') ] },
+    ];
+
+    const q = s.query.trim().toLowerCase();
+    const searchable = decorated.map(p => ({ ...p, hay: (p.title + ' ' + p.blurb + ' ' + p.stack + ' ' + p.catLabel + ' ' + p.status).toLowerCase() }));
+    const results = (q ? searchable.filter(p => p.hay.includes(q)) : decorated).slice(0, 7)
+      .map(p => ({ title: p.title, blurb: p.blurb, pick: p.open }));
+
+    const skills = [
+      { area:'AI / ML', chips:['RAG Systems','LLMs','Qdrant','TinyML','NLP','TensorFlow','OpenCV'] },
+      { area:'HARDWARE / IOT', chips:['Arduino','ESP32','Raspberry Pi','Embedded Systems','Sensor Integration'] },
+      { area:'SOFTWARE', chips:['Python','TypeScript','C++','React','Node.js','FastAPI','Firebase'] },
+      { area:'DATABASE', chips:['PostgreSQL','TimescaleDB','SQL','Schema Design','Time-Series'] },
+      { area:'FINANCE', chips:['Equity Markets','IPO Analysis','Derivatives','Event Studies','Excel'] },
+      { area:'CREATIVE', chips:['DaVinci Resolve','Blender','AutoCAD','Unity'] },
+    ];
+
+    const active = { bg:'var(--panel,#fff)', col:'var(--ink,#232320)', w:'600', sh:'0 1px 3px rgba(0,0,0,.08)' };
+    const idle = { bg:'transparent', col:'var(--muted,#8b8981)', w:'400', sh:'none' };
+    const g = view === 'grid' ? active : idle;
+    const j = view === 'journey' ? active : idle;
+
+    // activity heatmap: Aug 2024 – Jul 2026, active projects per month
+    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const heatShades = ['var(--chipbg2,#eceae4)', '#b8d4a8', '#7cb87c', '#4a7a48', '#33512f'];
+    const heatData = [
+      ['2024', 7, [1,1,1,1,1]],
+      ['2025', 0, [1,1,1,1,2,1,1,1,1,1,1,2]],
+      ['2026', 0, [1,2,2,3,2,1,4]]
+    ];
+    const heatCells = [];
+    heatData.forEach(([yr, off, arr]) => arr.forEach((v, i) => heatCells.push({
+      tip: monthNames[off + i] + ' ' + yr + ' · ' + v + ' active',
+      bg: heatShades[Math.min(v, heatShades.length - 1)]
+    })));
+
+    // stack × projects
+    const allProjects = this.getProjects();
+    const openProj = (id) => () => { this.setState({ sel: id, view: 'grid' }); const t = document.getElementById('projects'); if (t) window.scrollTo({ top: t.offsetTop, behavior: 'smooth' }); };
+    const toolList = ['Python', 'TypeScript', 'React', 'Node.js', 'ESP32', 'FastAPI', 'TinyML', 'DuckDB', 'Qdrant', 'Pandas', 'Rust', 'Excel'];
+    const toolChips = toolList.map(t => {
+      const on = s.toolSel === t;
+      return { label: t,
+        bg: on ? 'var(--ink,#232320)' : 'var(--panel,#fff)', col: on ? 'var(--bg,#f7f6f3)' : 'var(--sub2,#6d6b64)', border: on ? 'var(--ink,#232320)' : 'var(--line3,#e2dfd7)',
+        pick: () => this.setState({ toolSel: on ? null : t }) };
+    });
+    const toolProjects = s.toolSel
+      ? allProjects.filter(p => (p.stack || '').toLowerCase().includes(s.toolSel.toLowerCase())).map(p => ({ title: p.title, year: p.year, open: openProj(p.id) }))
+      : [];
+
+    return {
+      ...this.ghVals(),
+      cats, shown, pinnedShown, hasPinned, journey, skills, results, play,
+      heatCells, toolChips, toolProjects, toolSel: s.toolSel,
+      journeyDisp: view === 'journey' ? 'block' : 'none',
+      termDisp: s.termOpen ? 'flex' : 'none',
+      toolProjDisp: s.toolSel && toolProjects.length ? 'flex' : 'none',
+      themeLabel: s.dark ? '☀ Light mode' : '☾ Dark mode',
+      toggleTheme: (e) => this.toggleTheme(e),
+      termOpen: s.termOpen, termLines: s.termLines, termInput: s.termInput,
+      termGame: s.termGame, termGameOff: !s.termGame, termH: s.termGame ? '44vh' : '34vh',
+      gameRef: this._gameRef || (this._gameRef = (el) => {
+        if (el) { if (!el.dataset.g) { el.dataset.g = '1'; setTimeout(() => this.startGame(el), 30); } }
+        else if (this._g && !this._g.ctx.canvas.isConnected) this.stopGame();
+      }),
+      onTermInput: (e) => this.setState({ termInput: e.target.value }),
+      onTermKey: (e) => { if (e.key === 'Enter') this.runTerm(); },
+      closeTerm: () => this.setState({ termOpen: false }),
+      termRef: (el) => { if (el && !el.dataset.f) { el.dataset.f = '1'; el.focus(); } },
+      termOutRef: (el) => { this._termOut = el; },
+      sel: selRaw,
+      selJourney: view === 'journey' ? selRaw : null,
+      isGrid: view === 'grid',
+      isJourney: view === 'journey',
+      gridBg: g.bg, gridCol: g.col, gridW: g.w, gridSh: g.sh,
+      jBg: j.bg, jCol: j.col, jW: j.w, jSh: j.sh,
+      toGrid: () => this.setState({ view: 'grid' }),
+      toJourney: () => this.setState({ view: 'journey', sel: null }),
+      closeSel: () => this.setState({ sel: null }),
+
+      openSearch: () => this.setState({ searchOpen: true, query: '' }),
+      closeSearch: () => this.setState({ searchOpen: false }),
+      stop: (e) => e.stopPropagation(),
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      query: s.query,
+      searchOpen: s.searchOpen,
+      noResults: q.length > 0 && results.length === 0,
+      focusRef: (el) => { if (el && !el.dataset.focused) { el.dataset.focused = '1'; el.focus(); } },
+      openWildflow: () => { this.setState({ sel: 'wildflow', view: 'grid' }); const t = document.getElementById('projects'); if (t) t.closest('main,body,html') && window.scrollTo({ top: t.offsetTop, behavior: 'smooth' }); },
+      openRbi: () => { this.setState({ sel: 'rbi', view: 'grid' }); const t = document.getElementById('projects'); if (t) window.scrollTo({ top: t.offsetTop, behavior: 'smooth' }); },
+      openIpo: () => { this.setState({ sel: 'ipo', view: 'grid' }); const t = document.getElementById('projects'); if (t) window.scrollTo({ top: t.offsetTop, behavior: 'smooth' }); },
+      camFilters: [['all','All'],['ix115','Canon IXUS 115'],['ix970','Canon IXUS 970 IS'],['iphone','iPhone 16 Pro']].map(([id, label]) => {
+        const on = s.photoCam === id;
+        const allPh = this.getPhotos();
+        return {
+          label,
+          count: id === 'all' ? allPh.length : allPh.filter(p => p.cam === id).length,
+          bg: on ? '#232320' : '#fff', col: on ? '#f0efe9' : 'var(--sub2,#6d6b64)', border: on ? '#232320' : 'var(--line3,#e2dfd7)',
+          pick: () => this.setState({ photoCam: id, photoIdx: null })
+        };
+      }),
+      photos: this.getVisiblePhotos().map((p, i) => ({ src: p.src, alt: 'Photo · ' + p.label, open: () => this.setState({ photoIdx: i }) })),
+      lightbox: s.photoIdx != null,
+      lightboxImg: s.photoIdx != null ? React.createElement('img', {
+        src: this.getVisiblePhotos()[s.photoIdx].src,
+        alt: this.getVisiblePhotos()[s.photoIdx].label,
+        onClick: (e) => e.stopPropagation(),
+        style: { maxWidth: 'min(1100px,92vw)', maxHeight: '78vh', borderRadius: 10, boxShadow: '0 30px 80px rgba(0,0,0,.5)', cursor: 'default' }
+      }) : null,
+      lightboxCam: s.photoIdx != null ? this.getVisiblePhotos()[s.photoIdx].label.toUpperCase() : '',
+      lightboxIdx: s.photoIdx != null ? s.photoIdx + 1 : 0,
+      lightboxTotal: this.getVisiblePhotos().length,
+      closeLightbox: () => this.setState({ photoIdx: null }),
+      prevPhoto: (e) => { e.stopPropagation(); this.navPhoto(-1); },
+      nextPhoto: (e) => { e.stopPropagation(); this.navPhoto(1); },
+      typed: s.typed,
+      linkedinUrl: this.props.linkedinUrl ?? 'https://www.linkedin.com/',
+      mediumUrl: this.props.mediumUrl ?? 'https://medium.com/',
+    };
+  }
+}
+</script>
+</body>
+</html>
