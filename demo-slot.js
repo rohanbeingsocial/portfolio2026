@@ -285,7 +285,8 @@
         this._video.removeAttribute('src');
         this._img.style.display = 'none';
         this._img.removeAttribute('src');
-        this._empty.style.display = 'flex';
+        // only show the drop-zone placeholder while authoring; viewers see a clean panel
+        this._empty.style.display = editable ? 'flex' : 'none';
         this.removeAttribute('data-filled');
       }
     }
