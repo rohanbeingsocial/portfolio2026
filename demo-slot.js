@@ -118,7 +118,7 @@
     }
 
     connectedCallback() {
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((t) => this.addEventListener(t, this));
+      // display-only: drag-and-drop upload intentionally disabled
       subs.add(this._subFn);
       this.addEventListener('pointerenter', this._subFn);
       load().then(() => this._render());
@@ -285,8 +285,8 @@
         this._video.removeAttribute('src');
         this._img.style.display = 'none';
         this._img.removeAttribute('src');
-        // only show the drop-zone placeholder while authoring; viewers see a clean panel
-        this._empty.style.display = editable ? 'flex' : 'none';
+        // display-only: videos are set via the `video:` field, so no drop-zone placeholder
+        this._empty.style.display = 'none';
         this.removeAttribute('data-filled');
       }
     }
